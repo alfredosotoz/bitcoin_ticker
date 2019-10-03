@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'coin_data.dart';
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -8,6 +9,23 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
 
   String dropDownSelection = 'USD';
+
+  List<DropdownMenuItem> getDropDownItems(){
+
+    List<DropdownMenuItem<String>> dropDownItems = [];
+
+    for(int i=0; i<currenciesList.length; i++){
+      String currency = currenciesList[i];
+
+      var newItem = DropdownMenuItem(
+        child: Text('$currency'),
+        value: '$currency',
+      );
+
+      dropDownItems.add(newItem);
+    }
+    return dropDownItems;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,24 +65,7 @@ class _PriceScreenState extends State<PriceScreen> {
             color: Colors.amberAccent,
             child: DropdownButton<String>(
               value: dropDownSelection,
-              items: [
-                DropdownMenuItem(
-                  child: Text('USD'),
-                  value: 'USD',
-                ),
-                DropdownMenuItem(
-                  child: Text('MXN'),
-                  value: 'MXN',
-                ),
-                DropdownMenuItem(
-                  child: Text('EURO'),
-                  value: 'EURO',
-                ),
-                DropdownMenuItem(
-                  child: Text('YUAN'),
-                  value: 'YUAN',
-                ),
-              ],
+              items: getDropDownItems(),
               onChanged: (value){
                 setState(() {
                   dropDownSelection = value;
@@ -77,3 +78,20 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 }
+
+//                 DropdownMenuItem(
+//                  child: Text('USD'),
+//                  value: 'USD',
+//                ),
+//                DropdownMenuItem(
+//                  child: Text('MXN'),
+//                  value: 'MXN',
+//                ),
+//                DropdownMenuItem(
+//                  child: Text('EURO'),
+//                  value: 'EURO',
+//                ),
+//                DropdownMenuItem(
+//                  child: Text('YUAN'),
+//                  value: 'YUAN',
+//                ),
