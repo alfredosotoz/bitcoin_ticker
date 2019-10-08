@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'coin_data.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:io' show Platform;
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -8,12 +9,11 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-
   String dropDownSelection = 'USD';
 
-  List<DropdownMenuItem> getDropDownItems(){
+  DropdownButton<String> androidDropDown() {
     List<DropdownMenuItem<String>> dropDownItems = [];
-    for(int i=0; i<currenciesList.length; i++){
+    for (int i = 0; i < currenciesList.length; i++) {
       String currency = currenciesList[i];
       var newItem = DropdownMenuItem(
         child: Text('$currency'),
@@ -21,15 +21,32 @@ class _PriceScreenState extends State<PriceScreen> {
       );
       dropDownItems.add(newItem);
     }
-    return dropDownItems;
+    return DropdownButton<String>(
+      value: dropDownSelection,
+      items: dropDownItems,
+      onChanged: (value) {
+        setState(() {
+          dropDownSelection = value;
+        });
+      },
+    );
   }
 
-  List<Text> getPickerItems(){
+  CupertinoPicker iOSPicker(){
+
     List<Text> pickerItems = [];
-    for(String currency in currenciesList){
+    for (String currency in currenciesList) {
       pickerItems.add(Text(currency));
     }
-    return pickerItems;
+
+    return CupertinoPicker(
+      backgroundColor: Colors.amberAccent,
+      itemExtent: 32,
+      onSelectedItemChanged: (selected) {
+        print(selected);
+      },
+      children: pickerItems,
+    );
   }
 
   @override
@@ -64,18 +81,11 @@ class _PriceScreenState extends State<PriceScreen> {
             ),
           ),
           Container(
-            height: 150.0,
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(bottom: 30.0),
-            color: Colors.amberAccent,
-            child: CupertinoPicker(
-                backgroundColor: Colors.amberAccent,
-                itemExtent: 32,
-                onSelectedItemChanged: (selected){
-                  print(selected);
-                },
-                children: getPickerItems(),
-            )
+              height: 150.0,
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(bottom: 30.0),
+              color: Colors.amberAccent,
+              child: Platform.isIOS? iOSPicker() : androidDropDown(),
           ),
         ],
       ),
@@ -99,7 +109,6 @@ class _PriceScreenState extends State<PriceScreen> {
 //                  child: Text('YUAN'),
 //                  value: 'YUAN',
 //                ),
-
 
 //DropdownButton<String>(
 //value: dropDownSelection,
