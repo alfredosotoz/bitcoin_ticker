@@ -15,7 +15,7 @@ class _PriceScreenState extends State<PriceScreen> {
 
   void getData() async {
     try {
-      double data = await CoinData().getCoinData();
+      double data = await CoinData().getCoinData(dropDownSelection);
       setState(() {
         bitcoinValueInUSD = data.toStringAsFixed(0);
       });
@@ -45,6 +45,7 @@ class _PriceScreenState extends State<PriceScreen> {
       onChanged: (value) {
         setState(() {
           dropDownSelection = value;
+          getData();
         });
       },
     );
@@ -62,6 +63,8 @@ class _PriceScreenState extends State<PriceScreen> {
       itemExtent: 32,
       onSelectedItemChanged: (selected) {
         print(selected);
+        dropDownSelection = currenciesList[selected];
+        getData();
       },
       children: pickerItems,
     );

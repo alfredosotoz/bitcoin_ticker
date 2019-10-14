@@ -34,8 +34,8 @@ const List<String> cryptoList = [
 const bitcoinAverageURL ='https://apiv2.bitcoinaverage.com/indices/global/ticker';
 
 class CoinData {
-  Future getCoinData() async{
-    String requestedURL = '$bitcoinAverageURL/BTCUSD';
+  Future getCoinData(String selectedCurrency) async{
+    String requestedURL = '$bitcoinAverageURL/BTC$selectedCurrency';
     http.Response response = await http.get(requestedURL);
 
     if (response.statusCode == 200){
