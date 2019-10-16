@@ -35,17 +35,19 @@ const bitcoinAverageURL ='https://apiv2.bitcoinaverage.com/indices/global/ticker
 
 class CoinData {
   Future getCoinData(String selectedCurrency) async{
-    String requestedURL = '$bitcoinAverageURL/BTC$selectedCurrency';
-    http.Response response = await http.get(requestedURL);
-
-    if (response.statusCode == 200){
-      var decodedData = jsonDecode(response.body);
-      var lastPrice = decodedData['last'];
-      return lastPrice;
-    }else{
-      print(response.statusCode);
-      throw 'Problem with the get request';
+    Map<String, String> cryptoPrices = {};
+    for(String crypto in cryptoList){
+      String requestURL = '$bitcoinAverageURL/$crypto$selectedCurrency';
+      http.Response response = await http.get(requestURL);
+      if(response.statusCode == 200){
+        var decodedData = jsonDecode(response.body);
+        double lastPrice = decodedData['last'];
+        cryptoPrices[crypto] = lastPrice.toStringAsFixed(0);
+      }else{
+        print(response.statusCode);
+        throw 'Problem with the get request';
+      }
     }
-
+    return cryptoPrices;
   }
 }

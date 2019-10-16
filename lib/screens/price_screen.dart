@@ -13,11 +13,17 @@ class _PriceScreenState extends State<PriceScreen> {
 
   String bitcoinValueInUSD = '?';
 
+  Map<String, String> coinValues = {};
+
+  bool isWaiting =false;
+
   void getData() async {
+    isWaiting = true;
     try {
-      double data = await CoinData().getCoinData(dropDownSelection);
+      var data = await CoinData().getCoinData(dropDownSelection);
+      isWaiting = false;
       setState(() {
-        bitcoinValueInUSD = data.toStringAsFixed(0);
+        coinValues = data;
       });
     } catch (e) {
       print(e);
@@ -80,26 +86,25 @@ class _PriceScreenState extends State<PriceScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.orange,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              CryptoCard(
+                cryptoCurrency: 'BTC',
+                value: isWaiting ? '?' : coinValues['BTC'],
+                selectedCurrency: dropDownSelection,
               ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = $bitcoinValueInUSD',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
+              CryptoCard(
+                cryptoCurrency: 'ETH',
+                value: isWaiting ? '?' : coinValues['ETH'],
+                selectedCurrency: dropDownSelection,
               ),
-            ),
+              CryptoCard(
+                cryptoCurrency: 'LTC',
+                value: isWaiting? '?' : coinValues['LTC'],
+                selectedCurrency: dropDownSelection,
+              ),
+            ],
           ),
           Container(
               height: 150.0,
@@ -114,29 +119,36 @@ class _PriceScreenState extends State<PriceScreen> {
   }
 }
 
-//                 DropdownMenuItem(
-//                  child: Text('USD'),
-//                  value: 'USD',
-//                ),
-//                DropdownMenuItem(
-//                  child: Text('MXN'),
-//                  value: 'MXN',
-//                ),
-//                DropdownMenuItem(
-//                  child: Text('EURO'),
-//                  value: 'EURO',
-//                ),
-//                DropdownMenuItem(
-//                  child: Text('YUAN'),
-//                  value: 'YUAN',
-//                ),
+class CryptoCard extends StatelessWidget{
 
-//DropdownButton<String>(
-//value: dropDownSelection,
-//items: getDropDownItems(),
-//onChanged: (value){
-//setState(() {
-//dropDownSelection = value;
-//});
-//},
-//),
+  const CryptoCard({this.value, this.selectedCurrency, this.cryptoCurrency});
+
+  final String value;
+  final String selectedCurrency;
+  final String cryptoCurrency;
+
+  @override
+  Widget build(BuildContext context){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+      child: Card(
+        color: Colors.orange,
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+          child: Text(
+            '1 $cryptoCurrency = $value $selectedCurrency',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20.0,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
