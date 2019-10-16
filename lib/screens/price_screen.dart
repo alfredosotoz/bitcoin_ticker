@@ -9,7 +9,7 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-  String dropDownSelection = 'USD';
+  String dropDownSelection = 'MXN';
 
   String bitcoinValueInUSD = '?';
 
